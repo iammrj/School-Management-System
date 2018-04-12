@@ -5,9 +5,15 @@
  */
 package com.sms.ui;
 
+import com.sms.dtos.NewFrameDTO;
+import com.sms.utils.ReadFromJSON;
+import com.sms.utils.WriteToJSON;
 import java.util.Date;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -15,11 +21,26 @@ import java.text.SimpleDateFormat;
  */
 public class NewJFrame extends javax.swing.JFrame {
 
+    DateFormat oDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
     /**
      * Creates new form NewJFrame
      */
     public NewJFrame() {
         initComponents();
+        datePicker.setFormats(oDateFormat);
+        datePicker.setDate(new Date());  
+
+        NewFrameDTO dataObj = new ReadFromJSON().readFromFile();
+        dateField.setText(dataObj.getFieldOne());
+        field1.setText(dataObj.getFieldTwo());
+
+        try {
+            Date dateObj = oDateFormat.parse(dataObj.getDateField());
+            datePicker.setDate(dateObj);
+        } catch (ParseException ex) {
+            Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
 
@@ -34,6 +55,9 @@ public class NewJFrame extends javax.swing.JFrame {
 
         dateField = new javax.swing.JTextField();
         datePicker = new org.jdesktop.swingx.JXDatePicker();
+        field1 = new javax.swing.JTextField();
+        genJSON = new javax.swing.JButton();
+        readJSON = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -48,31 +72,51 @@ public class NewJFrame extends javax.swing.JFrame {
             }
         });
 
+        datePicker.setName(""); // NOI18N
+
+        genJSON.setText("Create JSON File");
+        genJSON.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                genJSONActionPerformed(evt);
+            }
+        });
+
+        readJSON.setText("Read JSON File");
+        readJSON.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                readJSONActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(120, 120, 120)
-                .addComponent(dateField, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(112, Short.MAX_VALUE))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(146, Short.MAX_VALUE)
-                    .addComponent(datePicker, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(120, Short.MAX_VALUE)))
+                .addGap(40, 40, 40)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(dateField, javax.swing.GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)
+                    .addComponent(field1)
+                    .addComponent(datePicker, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(genJSON, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(readJSON, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(33, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(94, 94, 94)
+                .addContainerGap()
                 .addComponent(dateField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(186, Short.MAX_VALUE))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(139, Short.MAX_VALUE)
-                    .addComponent(datePicker, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(139, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(field1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(datePicker, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(45, 45, 45)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(genJSON)
+                    .addComponent(readJSON))
+                .addContainerGap(137, Short.MAX_VALUE))
         );
 
         pack();
@@ -86,14 +130,38 @@ public class NewJFrame extends javax.swing.JFrame {
 
     private void dateFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dateFieldMouseClicked
         // TODO add your handling code here:
-        openDatePicker();
+        String date = openDatePicker();
+        System.out.println(date);
     }//GEN-LAST:event_dateFieldMouseClicked
 
-    private void openDatePicker() {
+    private void genJSONActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_genJSONActionPerformed
+        // TODO add your handling code here:
+        NewFrameDTO dataObj = new NewFrameDTO();
+        dataObj.setFieldOne(dateField.getText());
+        dataObj.setFieldTwo(field1.getText());
+        dataObj.setDateField(openDatePicker());
+        new WriteToJSON().writeToFile(dataObj);
+
+    }//GEN-LAST:event_genJSONActionPerformed
+
+    private void readJSONActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_readJSONActionPerformed
+        // TODO add your handling code here:
+        NewFrameDTO dataObj = new ReadFromJSON().readFromFile();
+        dateField.setText(dataObj.getFieldOne());
+        field1.setText(dataObj.getFieldTwo());
+
+        try {
+            Date dateObj = oDateFormat.parse(dataObj.getDateField());
+            datePicker.setDate(dateObj);
+        } catch (ParseException ex) {
+            Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_readJSONActionPerformed
+
+    private String openDatePicker() {
         Date oDate = datePicker.getDate();
-        DateFormat oDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String szDate = oDateFormat.format(oDate);
-        System.out.println(szDate);
+        return szDate;
     }
 
     /**
@@ -107,32 +175,29 @@ public class NewJFrame extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(NewJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
+        //</editor-fold>
+
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new NewJFrame().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new NewJFrame().setVisible(true);
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField dateField;
     private org.jdesktop.swingx.JXDatePicker datePicker;
+    private javax.swing.JTextField field1;
+    private javax.swing.JButton genJSON;
+    private javax.swing.JButton readJSON;
     // End of variables declaration//GEN-END:variables
 }

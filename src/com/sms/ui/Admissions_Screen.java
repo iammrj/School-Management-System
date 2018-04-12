@@ -5,7 +5,9 @@
  */
 package com.sms.ui;
 
+import com.sms.utils.Utilities;
 import java.awt.Color;
+import java.awt.MediaTracker;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -14,12 +16,15 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 
 /**
  *
  * @author jilanis
  */
 public class Admissions_Screen extends javax.swing.JFrame {
+
+    ImageIcon icon = new ImageIcon("C:\\Users\\jilanis\\AppData\\Local\\Temp\\test1.png");
 
     /**
      * Creates new form Home_Screen
@@ -30,6 +35,20 @@ public class Admissions_Screen extends javax.swing.JFrame {
         btn_submitAdmission.setBackground(Color.BLUE);
         genderGroup.add(rbtn_male);
         genderGroup.add(rbtn_female);
+        System.out.println("Printing Again");
+        lb_stPic.setIcon(new ImageIcon("C:\\Users\\jilanis\\AppData\\Local\\Temp\\test1.png"));
+    }
+    
+    public Admissions_Screen(String path){
+        SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    if (icon != null && icon.getImageLoadStatus() == MediaTracker.COMPLETE) {
+                        lb_stPic.setIcon(icon);
+                        System.out.println(lb_stPic.getIcon().getIconHeight() + ", " + lb_stPic.getIcon().getIconWidth());
+                    }
+                }
+            });
     }
 
     /**
@@ -45,7 +64,7 @@ public class Admissions_Screen extends javax.swing.JFrame {
         pnl_studentPhoto = new javax.swing.JPanel();
         btn_startCam = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        pnl_stPic = new javax.swing.JPanel();
+        lb_stPic = new javax.swing.JLabel();
         pnl_admissionDetails = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         tf_admissionDate = new javax.swing.JTextField();
@@ -125,17 +144,6 @@ public class Admissions_Screen extends javax.swing.JFrame {
         jButton2.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         jButton2.setText("Capture Photo");
 
-        javax.swing.GroupLayout pnl_stPicLayout = new javax.swing.GroupLayout(pnl_stPic);
-        pnl_stPic.setLayout(pnl_stPicLayout);
-        pnl_stPicLayout.setHorizontalGroup(
-            pnl_stPicLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        pnl_stPicLayout.setVerticalGroup(
-            pnl_stPicLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-
         javax.swing.GroupLayout pnl_studentPhotoLayout = new javax.swing.GroupLayout(pnl_studentPhoto);
         pnl_studentPhoto.setLayout(pnl_studentPhotoLayout);
         pnl_studentPhotoLayout.setHorizontalGroup(
@@ -143,7 +151,7 @@ public class Admissions_Screen extends javax.swing.JFrame {
             .addGroup(pnl_studentPhotoLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnl_studentPhotoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnl_stPic, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lb_stPic, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(pnl_studentPhotoLayout.createSequentialGroup()
                         .addComponent(btn_startCam, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
@@ -154,7 +162,7 @@ public class Admissions_Screen extends javax.swing.JFrame {
             pnl_studentPhotoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnl_studentPhotoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(pnl_stPic, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lb_stPic, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(pnl_studentPhotoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_startCam)
@@ -548,16 +556,25 @@ public class Admissions_Screen extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btn_startCamActionPerformed
 
-    public void setStudentPic() {
+    public void  setStudentPic() {
         try {
-//            BufferedImage image = ImageIO.read(new File(new Utilities().getTempPath() + "test1.png"));
-            BufferedImage image = ImageIO.read(new File("C:\\Users\\jilanis\\AppData\\Local\\Temp\\test1.png"));
-//            lb_stPic.setIcon(new ImageIcon("C:\\Users\\jilanis\\AppData\\Local\\Temp\\test1.png"));
+            BufferedImage image = ImageIO.read(new File(new Utilities().getTempPath() + "test1.png"));
+//            BufferedImage image = ImageIO.read(new File("C:\\Users\\jilanis\\AppData\\Local\\Temp\\test1.png"));
+////            lb_stPic.setIcon(new ImageIcon("C:\\Users\\jilanis\\AppData\\Local\\Temp\\test1.png"));
+//            lb_stPic.setIcon(icon);
+//            System.out.println(lb_stPic.getIcon().getIconHeight() + ", " + lb_stPic.getIcon().getIconWidth());
 //            lb_stPic = new JLabel(new ImageIcon(image));
-            JLabel lb_stPic = new JLabel(new ImageIcon(image));
-            pnl_stPic.add(lb_stPic);
-            pnl_stPic.revalidate();
-            pnl_stPic.repaint();
+//            JLabel lb_stPic = new JLabel(new ImageIcon(image));
+
+//            SwingUtilities.invokeLater(new Runnable() {
+//                @Override
+//                public void run() {
+//                    if (icon != null && icon.getImageLoadStatus() == MediaTracker.COMPLETE) {
+//                        lb_stPic.setIcon(icon);
+//                        System.out.println(lb_stPic.getIcon().getIconHeight() + ", " + lb_stPic.getIcon().getIconWidth());
+//                    }
+//                }
+//            });
         } catch (IOException ex) {
             Logger.getLogger(Admissions_Screen.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -638,11 +655,11 @@ public class Admissions_Screen extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField jTextField6;
+    private javax.swing.JLabel lb_stPic;
     private javax.swing.JPanel pnl_admissionDetails;
     private javax.swing.JPanel pnl_cand_info;
     private javax.swing.JPanel pnl_docs_info;
     private javax.swing.JPanel pnl_last_school;
-    private javax.swing.JPanel pnl_stPic;
     private javax.swing.JPanel pnl_studentPhoto;
     private javax.swing.JRadioButton rbtn_female;
     private javax.swing.JRadioButton rbtn_male;

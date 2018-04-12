@@ -18,6 +18,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import com.sms.utils.Utilities;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -68,6 +69,7 @@ public class CapturePic {
                 //To change body of generated methods, choose Tools | Templates.
                 WebcamUtils.capture(webcam, new Utilities().getTempPath() + "test1", ImageUtils.FORMAT_PNG);
                 webcam.close();
+//                new Admissions_Screen().lb_stPic.setIcon(new ImageIcon(new Utilities().getTempPath() + "test1.png"));
                 new Admissions_Screen().setStudentPic();
 //                new Admissions_Screen().show();
                 window.dispose();
